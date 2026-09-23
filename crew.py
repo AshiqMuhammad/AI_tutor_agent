@@ -1,4 +1,4 @@
-from crewai import Crew
+from crewai import Crew, Process
 
 
 def run_study_tutor(tutor, task):
@@ -6,8 +6,9 @@ def run_study_tutor(tutor, task):
     crew = Crew(
         agents=[tutor],
         tasks=[task],
-        verbose=True,
-        memory=False
+        process=Process.sequential,
+        memory=False,
+        verbose=True
     )
 
     result = crew.kickoff()
