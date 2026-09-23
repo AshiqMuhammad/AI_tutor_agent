@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 
 from agent import create_study_tutor
