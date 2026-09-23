@@ -36,18 +36,19 @@ st.markdown("""
         border-right: 1px solid #1F2937;
     }
 
-    /* Main heading */
+    /* Main title */
     .main-title {
-        font-size: 48px;
+        font-size: 46px;
         font-weight: 700;
         color: #F9FAFB;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
     }
 
+    /* Subtitle */
     .subtitle {
-        font-size: 18px;
+        font-size: 17px;
         color: #9CA3AF;
-        margin-bottom: 30px;
+        margin-bottom: 28px;
     }
 
     /* Feature cards */
@@ -56,21 +57,33 @@ st.markdown("""
         border: 1px solid #1F2937;
         border-radius: 16px;
         padding: 20px;
-        margin-bottom: 15px;
+        min-height: 120px;
+        margin-bottom: 20px;
     }
 
     .feature-title {
         font-size: 18px;
         font-weight: 600;
         color: #F9FAFB;
+        margin-bottom: 8px;
     }
 
     .feature-text {
         font-size: 14px;
         color: #9CA3AF;
+        line-height: 1.5;
     }
 
-    /* Input box */
+    /* Question label */
+    .question-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #F9FAFB;
+        margin-top: 15px;
+        margin-bottom: 12px;
+    }
+
+    /* Text area */
     textarea {
         background-color: #111827 !important;
         color: #F9FAFB !important;
@@ -78,7 +91,7 @@ st.markdown("""
         border-radius: 12px !important;
     }
 
-    /* Button */
+    /* Ask button */
     .stButton > button {
         width: 100%;
         border-radius: 12px;
@@ -96,20 +109,29 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
-    /* Answer box */
-    .answer-box {
+    /* Answer heading */
+    .answer-title {
         background-color: #111827;
         border: 1px solid #312E81;
-        border-radius: 16px;
-        padding: 25px;
-        margin-top: 25px;
-    }
-
-    .answer-title {
+        border-bottom: none;
+        border-radius: 16px 16px 0 0;
+        padding: 20px 24px 10px 24px;
         color: #A78BFA;
         font-size: 22px;
         font-weight: 600;
-        margin-bottom: 15px;
+        margin-top: 30px;
+    }
+
+    /* Answer content */
+    .answer-content {
+        background-color: #111827;
+        border: 1px solid #312E81;
+        border-top: none;
+        border-radius: 0 0 16px 16px;
+        padding: 10px 24px 24px 24px;
+        color: #E5E7EB;
+        line-height: 1.7;
+        margin-bottom: 30px;
     }
 
     /* Footer */
@@ -117,8 +139,21 @@ st.markdown("""
         text-align: center;
         color: #6B7280;
         font-size: 13px;
+        padding: 25px 0 10px 0;
+        border-top: 1px solid #1F2937;
         margin-top: 50px;
-        padding: 20px;
+    }
+
+    .footer-title {
+        color: #9CA3AF;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    /* Remove unnecessary Streamlit spacing */
+    div[data-testid="stVerticalBlock"] {
+        gap: 0.5rem;
     }
 
 </style>
@@ -180,13 +215,14 @@ st.markdown(
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
 
     st.markdown("""
     <div class="feature-card">
         <div class="feature-title">💡 Simple Explanations</div>
         <div class="feature-text">
-            Understand difficult topics using simple language.
+            Understand difficult topics using simple and clear language.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -198,7 +234,7 @@ with col2:
     <div class="feature-card">
         <div class="feature-title">🧠 Step-by-Step Learning</div>
         <div class="feature-text">
-            Learn concepts gradually with clear examples.
+            Learn concepts gradually with examples and explanations.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -210,7 +246,7 @@ with col3:
     <div class="feature-card">
         <div class="feature-title">📝 Practice</div>
         <div class="feature-text">
-            Get practice questions to test your knowledge.
+            Get practice questions to check your understanding.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -220,7 +256,10 @@ with col3:
 # QUESTION SECTION
 # =========================
 
-st.markdown("### Ask Your Tutor")
+st.markdown(
+    '<div class="question-title">Ask Your Tutor</div>',
+    unsafe_allow_html=True
+)
 
 question = st.text_area(
     "Enter your question",
@@ -237,7 +276,6 @@ question = st.text_area(
 if st.button("🚀 Ask Study Tutor"):
 
     if question.strip() == "":
-
         st.warning("Please enter a question first.")
 
     else:
@@ -246,13 +284,16 @@ if st.button("🚀 Ask Study Tutor"):
 
             try:
 
+                # Create AI tutor
                 tutor = create_study_tutor()
 
+                # Create task
                 task = create_study_task(
                     tutor,
                     question
                 )
 
+                # Run CrewAI
                 answer = run_study_tutor(
                     tutor,
                     task
@@ -262,25 +303,30 @@ if st.button("🚀 Ask Study Tutor"):
                 # ANSWER
                 # =========================
 
-                st.markdown("""
-                <div class="answer-box">
-                    <div class="answer-title">
-                        🤖 Tutor's Answer
-                    </div>
-                """, unsafe_allow_html=True)
+                st.markdown(
+                    '<div class="answer-title">🤖 Tutor\'s Answer</div>',
+                    unsafe_allow_html=True
+                )
+
+                st.markdown(
+                    '<div class="answer-content">',
+                    unsafe_allow_html=True
+                )
 
                 st.write(answer)
 
-                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown(
+                    '</div>',
+                    unsafe_allow_html=True
+                )
 
             except Exception as e:
 
-                st.error(
-                    "Something went wrong. Please check your API key "
-                    "and CrewAI configuration."
-                )
+                st.error("The tutor could not generate an answer.")
 
-                st.caption(str(e))
+                st.markdown("### 🔍 Error Details")
+
+                st.exception(e)
 
 
 # =========================
@@ -290,11 +336,17 @@ if st.button("🚀 Ask Study Tutor"):
 st.markdown("""
 <div class="footer">
 
-    📚 Study Tutor AI
-    
-    <br><br>
-    
-    Built with Streamlit • CrewAI • Groq
+    <div class="footer-title">
+        📚 Study Tutor AI
+    </div>
+
+    <div>
+        Your personal AI tutor for simple and effective learning.
+    </div>
+
+    <div style="margin-top: 10px;">
+        Built with Streamlit • CrewAI • Groq
+    </div>
 
 </div>
 """, unsafe_allow_html=True)
