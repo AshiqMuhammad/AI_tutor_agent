@@ -6,7 +6,8 @@ def run_study_tutor(tutor, task):
     crew = Crew(
         agents=[tutor],
         tasks=[task],
-        verbose=True
+        verbose=True,
+        memory=False
     )
 
     result = crew.kickoff()
